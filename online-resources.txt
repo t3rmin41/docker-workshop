@@ -174,3 +174,101 @@ centos              latest              2d194b392dd1        2 weeks ago         
 docker run -d -p 80:3000 -v ~/projects/node-backend/db:/db:Z skills-api:0.0.1 // :Z - selinux flag
 
 docker run -d -p 80:80 web-app:v0.0.1
+
+Docker networking:
+
+[guru@d1 projects]$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+57e629977511        bridge              bridge              local
+3e1661f6a82b        host                host                local
+877811f3daf5        none                null                local
+[guru@d1 projects]$
+[guru@d1 projects]$
+[guru@d1 projects]$
+[guru@d1 projects]$
+[guru@d1 projects]$ docker network create backend1
+29f28c442529d60b34b35efd4c2d8e8a1d7d5486d6a9c7dddbb908e81e5e4410
+[guru@d1 projects]$
+[guru@d1 projects]$
+[guru@d1 projects]$
+[guru@d1 projects]$
+[guru@d1 projects]$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+29f28c442529        backend1            bridge              local
+57e629977511        bridge              bridge              local
+3e1661f6a82b        host                host                local
+877811f3daf5        none                null                local
+
+
+docker run -ti --net backend1 --name client1 -h client1 alpine ash
+
+docker run -it --net=backend1 --name client2 -h client2 --add-host=client1:172.18.0.2 alpine ash
+
+docker run -it --net=backend1 --name=client3 -h=client3 alpine ash
+
+
+[guru@d1 ~]$ docker inspect network backend1
+[
+    {
+        "Name": "backend1",
+        "Id": "29f28c442529d60b34b35efd4c2d8e8a1d7d5486d6a9c7dddbb908e81e5e4410",
+        "Created": "2018-03-26T15:26:35.080667389+03:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "3936738d2d9aa82a8ebabf6b3dc7c14cfca5280501441b3e05528057db2dfde4": {
+                "Name": "client2",
+                "EndpointID": "885f184dd965c84652ac0a2ea7341c0f52db040fb0d19ff81eebc84cfd3067e8",
+                "MacAddress": "02:42:ac:12:00:03",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            },
+            "8bd20268b322690f782fd623478800b0cd8d54d7f824d65a2358f5cf62b4793b": {
+                "Name": "client1",
+                "EndpointID": "745e230dda778cd6941551bfa28e06750bed81d46efb5a806b547be8d8e31799",
+                "MacAddress": "02:42:ac:12:00:02",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]
+Error: No such object: network
+[guru@d1 ~]$
+
+Find out client1 IP address:
+docker inspect --format '{{ range .NetworkSettings.Networks}}{{.IPAddress}}{{ end}}' client1
+
+
+[guru@d1 ~]$ docker run -d -p 8000:80 --name=web1 nginx
+35dc3a42c7e2a02f2aab8180b8585b133223b5c21fcf12efe2d877ecf9835313
+[guru@d1 ~]$
+
+[guru@d1 projects]$ sudo iptables -t nat -nL DOCKER //launched not from container but from host OS
+Chain DOCKER (2 references)
+target     prot opt source               destination
+RETURN     all  --  0.0.0.0/0            0.0.0.0/0
+RETURN     all  --  0.0.0.0/0            0.0.0.0/0
+RETURN     all  --  0.0.0.0/0            0.0.0.0/0
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.17.0.2:80
+[guru@d1 projects]$
