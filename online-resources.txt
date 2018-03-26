@@ -11,6 +11,11 @@ Linux commands:
 
 sudo -i
 hostnamectl
+sudo unshare --fork --pid --mount-proc bash
+
+Docker is not virtualization, it's namespace based containerization tool working on root, 
+Docker daemon uses root account
+
 
 VBox host network manager
 Adapter IP: 10.0.0.101
@@ -18,4 +23,43 @@ DHCP server address: 10.0.0.102
 Mask: 255.255.255.0
 Address range:
 10.0.0.103/10.0.0.200
+
+Docker commands
+
+docker info
+
+docker container ls (list active containers)
+
+Run container (-ti : interactive, alpine : linux distributive, ash - alpine shell)
+docker container run -ti --name demo alpine ash
+
+[root@d1 guru]# docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
+a209e1f9c398        alpine              "ash"               About a minute ago   Up About a minute                       demo
+[root@d1 guru]# docker logs demo (demo : container namespace)
+
+docker logs demo -f (-f : follow) // show container activity in other window
+
+docker container ls -a (-a : all, not only active container)
+
+[guru@d1 ~]$ docker container ls -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+a209e1f9c398        alpine              "ash"                    5 minutes ago       Exited (0) 43 seconds ago                       demo
+3cde5267af92        centos              "hostname"               4 days ago          Exited (0) 4 days ago                           dazzling_darwin
+1f05aa402263        centos:7            "/bin/bash"              4 days ago          Exited (0) 4 days ago                           priceless_roentgen
+33821ef1dfbe        ubuntu:16.04        "/bin/bash"              4 days ago          Exited (0) 4 days ago                           musing_mirzakhani
+4b64cef7cd1f        ubuntu:14.04        "/bin/bash"              4 days ago          Exited (0) 4 days ago                           musing_shockley
+d7f865385767        busybox             "echo 'hello from bu…"   4 days ago          Exited (0) 4 days ago                           epic_kilby
+b5b31a066bb5        busybox             "sh"                     4 days ago          Exited (0) 4 days ago                           optimistic_poitras
+e50bb2219d09        ubuntu              "/bin/bash"              5 days ago          Exited (0) 5 days ago                           hungry_banach
+b9aff0270ac2        centos              "/bin/bash"              5 days ago          Exited (0) 5 days ago                           eloquent_darwin
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$ docker start demo
+demo
+[guru@d1 ~]$ docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+a209e1f9c398        alpine              "ash"               7 minutes ago       Up 12 seconds                           demo
+[guru@d1 ~]$
 
