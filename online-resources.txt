@@ -1,3 +1,15 @@
 goo.gl/dazTeg
 
 github.com/oxyo
+
+RedHat login:
+
+user:guru
+pass:work
+
+VBox host network manager
+Adapter IP: 10.0.0.101
+DHCP server address: 10.0.0.102
+Mask: 255.255.255.0
+Address range:
+10.0.0.103/10.0.0.200
