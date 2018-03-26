@@ -1,9 +1,9 @@
-goo.gl/dazTeg
+Online resources:
 
+goo.gl/dazTeg
 github.com/oxyo
 
 RedHat login:
-
 user:guru
 pass:work
 
@@ -12,6 +12,11 @@ Linux commands:
 sudo -i
 hostnamectl
 sudo unshare --fork --pid --mount-proc bash
+
+locate docker // list binary usage files, configs, etc
+systemctl status docker //
+journalctl -u docker //show docker logs
+journalctl -u docker -f //show docker logs in real-time (-f : follow)
 
 Docker is not virtualization, it's namespace based containerization tool working on root, 
 Docker daemon uses root account
@@ -24,7 +29,7 @@ Mask: 255.255.255.0
 Address range:
 10.0.0.103/10.0.0.200
 
-Docker commands
+Docker commands (DOCKER COMMANDS)
 
 docker info
 
@@ -63,3 +68,65 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 a209e1f9c398        alpine              "ash"               7 minutes ago       Up 12 seconds                           demo
 [guru@d1 ~]$
 
+
+Remove docker container
+[guru@d1 ~]$ docker container ls -a //list containers
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES
+43bd39346358        centos              "hostname"               2 minutes ago       Exited (0) 2 minutes ago                       friendly_thompson
+6125ac8de6ba        centos              "echo kuku"              2 minutes ago       Exited (0) 2 minutes ago                       inspiring_bhabha
+a209e1f9c398        alpine              "ash"                    36 minutes ago      Up 29 minutes                                  demo
+3cde5267af92        centos              "hostname"               4 days ago          Exited (0) 4 days ago                          dazzling_darwin
+1f05aa402263        centos:7            "/bin/bash"              5 days ago          Exited (0) 5 days ago                          priceless_roentgen
+33821ef1dfbe        ubuntu:16.04        "/bin/bash"              5 days ago          Exited (0) 5 days ago                          musing_mirzakhani
+4b64cef7cd1f        ubuntu:14.04        "/bin/bash"              5 days ago          Exited (0) 5 days ago                          musing_shockley
+d7f865385767        busybox             "echo 'hello from bu…"   5 days ago          Exited (0) 5 days ago                          epic_kilby
+b5b31a066bb5        busybox             "sh"                     5 days ago          Exited (0) 5 days ago                          optimistic_poitras
+e50bb2219d09        ubuntu              "/bin/bash"              5 days ago          Exited (0) 5 days ago                          hungry_banach
+b9aff0270ac2        centos              "/bin/bash"              5 days ago          Exited (0) 5 days ago                          eloquent_darwin
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$ docker rm demo
+Error response from daemon: You cannot remove a running container a209e1f9c398e7ca9024f2893201b9114f4ed543ffddd0b7722b1abe7b09ea7d. Stop the container before attempting removal or force remove
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$ docker rm -f demo
+demo
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$ docker container ls -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES
+43bd39346358        centos              "hostname"               2 minutes ago       Exited (0) 2 minutes ago                       friendly_thompson
+6125ac8de6ba        centos              "echo kuku"              2 minutes ago       Exited (0) 2 minutes ago                       inspiring_bhabha
+3cde5267af92        centos              "hostname"               4 days ago          Exited (0) 4 days ago                          dazzling_darwin
+1f05aa402263        centos:7            "/bin/bash"              5 days ago          Exited (0) 5 days ago                          priceless_roentgen
+33821ef1dfbe        ubuntu:16.04        "/bin/bash"              5 days ago          Exited (0) 5 days ago                          musing_mirzakhani
+4b64cef7cd1f        ubuntu:14.04        "/bin/bash"              5 days ago          Exited (0) 5 days ago                          musing_shockley
+d7f865385767        busybox             "echo 'hello from bu…"   5 days ago          Exited (0) 5 days ago                          epic_kilby
+b5b31a066bb5        busybox             "sh"                     5 days ago          Exited (0) 5 days ago                          optimistic_poitras
+e50bb2219d09        ubuntu              "/bin/bash"              5 days ago          Exited (0) 5 days ago                          hungry_banach
+b9aff0270ac2        centos              "/bin/bash"              5 days ago          Exited (0) 5 days ago                          eloquent_darwin
+[guru@d1 ~]$
+
+Run docker container as daemon (-p 80:80 [port mapping from-to container, -h web1 : "web1" will be seen inside container)
+docker run -d -p 80:80 --name web1 -h web1 nginx
+
+Attach to web1:
+docker attach web1
+
+Deattach from attached processes (kill all detaches)
+sudo pkill -9 -f 'docker.*attach'
+
+Initiate shell session to container:
+docker exec -ti web1 bash
+
+Stop container:
+[guru@d1 ~]$ docker stop web1
+web1
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$
+[guru@d1 ~]$ docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+[guru@d1 ~]$
