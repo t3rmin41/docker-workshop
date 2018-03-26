@@ -3,6 +3,8 @@ Online resources:
 goo.gl/dazTeg
 github.com/oxyo
 
+Bitvise SSH Client 7.39
+
 RedHat login:
 user:guru
 pass:work
@@ -130,3 +132,43 @@ web1
 [guru@d1 ~]$ docker container ls
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 [guru@d1 ~]$
+
+
+connect to container:
+1. Start container:
+docker start [containerName]
+2. Connect to container with bash
+docker exec -ti [containerName] bash
+
+Build Docker containers:
+
+[guru@d1 ~/projects]$ git clone https://github.com/oxyo/node-backend.git
+[guru@d1 ~/projects]$ cd node-backend/
+[guru@d1 node-backend]$ ls -la
+total 40
+drwxrwxr-x. 4 guru guru   161 Mar 26 13:55 .
+drwxrwxr-x. 3 guru guru    26 Mar 26 13:37 ..
+-rw-rw-r--. 1 guru guru  3267 Mar 26 13:51 app.js
+drwxrwxr-x. 2 guru guru    23 Mar 26 13:38 db
+-rw-rw-r--. 1 guru guru   387 Mar 26 13:38 Dockerfile
+-rw-rw-r--. 1 guru guru    27 Mar 26 13:38 .dockerignore
+drwxrwxr-x. 8 guru guru   163 Mar 26 13:38 .git
+-rw-rw-r--. 1 guru guru   112 Mar 26 13:38 .gitignore
+-rw-rw-r--. 1 guru guru   396 Mar 26 13:50 package.json
+-rw-rw-r--. 1 guru guru 14397 Mar 26 13:38 package-lock.json
+-rw-rw-r--. 1 guru guru  1141 Mar 26 13:38 README.md
+[guru@d1 node-backend]$
+[guru@d1 node-backend]$
+[guru@d1 node-backend]$
+[guru@d1 node-backend]$ docker build . -t skills-api:0.0.1
+
+[guru@d1 node-backend]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+skills-api          0.0.1               30dc1c6c219e        17 seconds ago      715MB
+t3rmin41/mydev      v2                  28b12932ccce        43 minutes ago      216MB
+node                carbon              41a1f5b81103        9 days ago          673MB
+centos              latest              2d194b392dd1        2 weeks ago         195MB
+[guru@d1 node-backend]$
+[guru@d1 node-backend]$
+
+docker run -d -p 80:3000 -v ~/projects/node-backend/db:/db:Z skills-api:0.0.1 // :Z - selinux flag
