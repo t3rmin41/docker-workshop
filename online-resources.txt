@@ -172,3 +172,5 @@ centos              latest              2d194b392dd1        2 weeks ago         
 [guru@d1 node-backend]$
 
 docker run -d -p 80:3000 -v ~/projects/node-backend/db:/db:Z skills-api:0.0.1 // :Z - selinux flag
+
+docker run -d -p 80:80 web-app:v0.0.1
