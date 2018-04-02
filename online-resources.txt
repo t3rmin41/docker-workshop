@@ -111,6 +111,39 @@ e50bb2219d09        ubuntu              "/bin/bash"              5 days ago     
 b9aff0270ac2        centos              "/bin/bash"              5 days ago          Exited (0) 5 days ago                          eloquent_darwin
 [guru@d1 ~]$
 
+Run docker container in detached mode (the whole container as daemon):
+admin@localhost:~$ docker container ls -a
+CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS                         PORTS               NAMES
+f7b7d099cd49        nginx                      "nginx -g 'daemon ..."   57 minutes ago      Exited (0) 53 minutes ago                          web-server
+1e20134a0784        alpine                     "ash"                    About an hour ago   Exited (0) About an hour ago                       alpine-linux
+ed997ddfabc2        pyriand3r/i386-mysql:5.7   "/entrypoint.sh my..."   About an hour ago   Exited (0) 54 minutes ago                          mysql-server
+admin@localhost:~$
+admin@localhost:~$
+admin@localhost:~$
+admin@localhost:~$
+admin@localhost:~$ docker container run -d -it --name centos-server  i386/centos:6 
+b9027ea710798a055d5b30e332cbb936a0fd396209149e083218f801babd4168
+admin@localhost:~$
+admin@localhost:~$
+admin@localhost:~$ docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+b9027ea71079        i386/centos:6       "/bin/bash"         9 seconds ago       Up 9 seconds                            centos-server
+admin@localhost:~$ docker exec -ti centos-server bash //connect to centos-server container
+[root@b9027ea71079 /]#
+[root@b9027ea71079 /]# exit
+exit
+admin@localhost:~$ docker stop centos-server
+centos-server
+admin@localhost:~$ docker container ls -a
+CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS                         PORTS               NAMES
+b9027ea71079        i386/centos:6              "/bin/bash"              About a minute ago   Exited (137) 3 seconds ago                         centos-server
+f7b7d099cd49        nginx                      "nginx -g 'daemon ..."   59 minutes ago       Exited (0) 55 minutes ago                          web-server
+1e20134a0784        alpine                     "ash"                    About an hour ago    Exited (0) About an hour ago                       alpine-linux
+ed997ddfabc2        pyriand3r/i386-mysql:5.7   "/entrypoint.sh my..."   About an hour ago    Exited (0) 56 minutes ago                          mysql-server
+admin@localhost:~$
+
+
+
 Run docker container as daemon (-p 80:80 [port mapping from-to container, -h web1 : "web1" will be seen inside container)
 docker run -d -p 80:80 --name web1 -h web1 nginx
 
